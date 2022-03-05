@@ -1,11 +1,9 @@
 package com.br.avaliacao.Avaliacao.exceptions;
 
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -26,9 +23,8 @@ public class ExceptionsHandlers {
 	@Autowired
 	private MessageSource messageSource;
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public List<MethodArgumentNotValid> hand(MethodArgumentNotValidException exception) {
+	public ResponseEntity<List<MethodArgumentNotValid>> hand(MethodArgumentNotValidException exception) {
 
 		List<MethodArgumentNotValid> mtd = new ArrayList<>();
 
@@ -40,13 +36,11 @@ public class ExceptionsHandlers {
 
 			mtd.add(argumentsNotValid);
 		});
-		return mtd;
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mtd);
 	}
 
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<StandardError> handle(HttpMessageNotReadableException exception, HttpServletRequest request)
-			throws IOException {
+	public ResponseEntity<StandardError> handle(HttpMessageNotReadableException exception, HttpServletRequest request) {
 
 		exception.getMostSpecificCause().addSuppressed(exception);
 		StandardError err = new StandardError();
@@ -59,8 +53,7 @@ public class ExceptionsHandlers {
 
 	}
 
-	@ResponseStatus(code = HttpStatus.NOT_FOUND)
-	@ExceptionHandler(EntityNotFoundException.class)
+	@ExceptionHandler(EntityNotFound.class)
 	public ResponseEntity<StandardError> entityNotFound(EntityNotFound exception, HttpServletRequest request) {
 
 		StandardError err = new StandardError();
@@ -72,7 +65,6 @@ public class ExceptionsHandlers {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	}
 
-	@ResponseStatus(code = HttpStatus.NOT_ACCEPTABLE)
 	@ExceptionHandler(ValidationOfTimeSinceFundation.class)
 	public ResponseEntity<StandardError> ValidationOfTimeSinceFundation(ValidationOfTimeSinceFundation exception,
 			HttpServletRequest request) {

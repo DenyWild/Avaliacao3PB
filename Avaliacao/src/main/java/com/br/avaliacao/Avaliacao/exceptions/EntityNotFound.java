@@ -1,8 +1,6 @@
 package com.br.avaliacao.Avaliacao.exceptions;
 
-import javax.persistence.EntityNotFoundException;
-
-public class EntityNotFound extends EntityNotFoundException{
+public class EntityNotFound extends RuntimeException{
 	
 	private static final long serialVersionUID = 1L;
 

@@ -18,5 +18,7 @@ public class MethodArgumentNotValid {
 	public String getMessage() {
 		return message;
 	}
+	
+	
 
 }
