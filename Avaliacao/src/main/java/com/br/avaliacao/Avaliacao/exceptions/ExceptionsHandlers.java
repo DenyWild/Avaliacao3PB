@@ -16,6 +16,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class ExceptionsHandlers {
@@ -50,6 +51,20 @@ public class ExceptionsHandlers {
 		err.setMessage("It's not possible insert that value in the region param");
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
+
+	}
+	
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<StandardError> handle(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+
+		
+		StandardError err = new StandardError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
+		err.setError("Method not Allowed");
+		err.setMessage("this region doesnt exist");
+		err.setPath(request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(err);
 
 	}
 
