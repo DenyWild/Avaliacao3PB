@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.br.avaliacao.Avaliacao.exceptions.EntityNotFound;
 import com.br.avaliacao.Avaliacao.exceptions.ValidationOfTimeSinceFundation;
@@ -36,7 +35,7 @@ public class StatesService {
 		return statesRepository.findAll();
 	}
 
-	public @ResponseBody States saveState(@Valid States states) {
+	public States saveState(@Valid States states) {
 		return validationTimeSinceFundation(states);
 	}
 

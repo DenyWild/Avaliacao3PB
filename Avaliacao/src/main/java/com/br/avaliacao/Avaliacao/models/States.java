@@ -3,16 +3,15 @@ package com.br.avaliacao.Avaliacao.models;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.br.avaliacao.Avaliacao.models.enums.Region;
 
@@ -22,16 +21,14 @@ public class States {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotEmpty
-	@NotNull
+	@NotBlank
 	private String name;
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private Region region;
 	@NotNull
 	private double population;
-	@NotEmpty
-	@NotNull
+	@NotBlank
 	private String capital;
 	@NotNull
 	private double area;
@@ -44,9 +41,8 @@ public class States {
 
 	}
 
-	public States(@NotEmpty @NotNull String name, @NotNull Region region, @NotNull double population,
-			@NotEmpty @NotNull String capital, @NotNull double area, @NotNull LocalDate fundationDate,
-			@NotNull int timeSinceFundation) {
+	public States(@NotBlank String name, @NotNull Region region, @NotNull double population, @NotBlank String capital,
+			@NotNull double area, @NotNull LocalDate fundationDate, @NotNull int timeSinceFundation) {
 		super();
 		this.name = name;
 		this.region = region;
@@ -149,6 +145,4 @@ public class States {
 				+ ", timeSinceFundation= " + timeSinceFundation + "]";
 	}
 
-	
-	
 }

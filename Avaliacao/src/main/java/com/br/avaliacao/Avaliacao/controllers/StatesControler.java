@@ -1,9 +1,7 @@
 package com.br.avaliacao.Avaliacao.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -19,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.br.avaliacao.Avaliacao.exceptions.EntityNotFound;
 import com.br.avaliacao.Avaliacao.models.States;
 import com.br.avaliacao.Avaliacao.models.enums.Region;
-import com.br.avaliacao.Avaliacao.repositories.StatesRepository;
 import com.br.avaliacao.Avaliacao.services.StatesService;
 
 @RestController
