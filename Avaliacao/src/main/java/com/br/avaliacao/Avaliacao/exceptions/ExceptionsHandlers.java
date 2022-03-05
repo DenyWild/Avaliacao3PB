@@ -25,7 +25,7 @@ public class ExceptionsHandlers {
 	private MessageSource messageSource;
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<List<MethodArgumentNotValid>> hand(MethodArgumentNotValidException exception) {
+	public ResponseEntity<List<MethodArgumentNotValid>> methodArgumentNotValid(MethodArgumentNotValidException exception) {
 
 		List<MethodArgumentNotValid> mtd = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class ExceptionsHandlers {
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<StandardError> handle(HttpMessageNotReadableException exception, HttpServletRequest request) {
+	public ResponseEntity<StandardError> httpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
 
 		exception.getMostSpecificCause().addSuppressed(exception);
 		StandardError err = new StandardError();
@@ -55,7 +55,7 @@ public class ExceptionsHandlers {
 	}
 	
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<StandardError> handle(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+	public ResponseEntity<StandardError> methodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
 
 		
 		StandardError err = new StandardError();
