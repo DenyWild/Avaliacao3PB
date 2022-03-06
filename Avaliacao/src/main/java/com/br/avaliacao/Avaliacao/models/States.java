@@ -11,6 +11,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Range;
 
 import com.br.avaliacao.Avaliacao.models.enums.Region;
 
@@ -21,15 +24,19 @@ public class States {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotBlank
+	@Size(min = 1, max = 58)
 	private String name;
 	@Enumerated(EnumType.STRING)
 	@NotNull
 	private Region region;
 	@NotNull
+	@Range(min = 1, max = 300000000)
 	private double population;
 	@NotBlank
+	@Size(min = 1, max = 58)
 	private String capital;
 	@NotNull
+	@Range(min = 1, max = 999999999)
 	private double area;
 	@NotNull
 	private LocalDate fundationDate;
@@ -40,8 +47,10 @@ public class States {
 
 	}
 
-	public States(@NotBlank String name, @NotNull Region region, @NotNull double population, @NotBlank String capital,
-			@NotNull double area, @NotNull LocalDate fundationDate, @NotNull int timeSinceFundation) {
+	public States(@NotBlank @Size(min = 1, max = 58) String name, @NotNull Region region,
+			@NotNull @Range(min = 1, max = 300000000) double population,
+			@NotBlank @Size(min = 1, max = 58) String capital, @NotNull @Range(min = 1, max = 999999999) double area,
+			@NotNull LocalDate fundationDate, @NotNull int timeSinceFundation) {
 		super();
 		this.name = name;
 		this.region = region;
