@@ -12,6 +12,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +26,8 @@ public class ExceptionsHandlers {
 	private MessageSource messageSource;
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<List<MethodArgumentNotValid>> methodArgumentNotValid(MethodArgumentNotValidException exception) {
+	public ResponseEntity<List<MethodArgumentNotValid>> methodArgumentNotValid(
+			MethodArgumentNotValidException exception) {
 
 		List<MethodArgumentNotValid> mtd = new ArrayList<>();
 
@@ -41,23 +43,24 @@ public class ExceptionsHandlers {
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	public ResponseEntity<StandardError> httpMessageNotReadable(HttpMessageNotReadableException exception, HttpServletRequest request) {
+	public ResponseEntity<StandardError> httpMessageNotReadable(HttpMessageNotReadableException exception,
+			HttpServletRequest request) {
 
 		exception.getMostSpecificCause().addSuppressed(exception);
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.NOT_ACCEPTABLE.value());
 		err.setError("Resource not acceptable");
-		err.setMessage("It's not possible insert that value in the region param");
+		err.setMessage("It's not possible insert that value in the param where " + exception.getRootCause());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
 
 	}
-	
-	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
-	public ResponseEntity<StandardError> methodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
 
-		
+	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
+	public ResponseEntity<StandardError> methodArgumentTypeMismatch(MethodArgumentTypeMismatchException exception,
+			HttpServletRequest request) {
+
 		StandardError err = new StandardError();
 		err.setTimestamp(Instant.now());
 		err.setStatus(HttpStatus.METHOD_NOT_ALLOWED.value());
@@ -91,6 +94,19 @@ public class ExceptionsHandlers {
 		err.setMessage(exception.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(err);
+	}
+
+	@ExceptionHandler(TransactionSystemException.class)
+	public ResponseEntity<StandardError> transactionalSystemException(TransactionSystemException exception,
+			HttpServletRequest request) {
+
+		StandardError err = new StandardError();
+		err.setTimestamp(Instant.now());
+		err.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+		err.setError("Resource not acceptable");
+		err.setMessage(exception.getMessage());
+		err.setPath(request.getRequestURI());
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(err);
 	}
 
 }
