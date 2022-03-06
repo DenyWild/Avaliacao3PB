@@ -56,13 +56,13 @@ public class StatesControler {
 	}
 
 	@GetMapping("/biggestpopulation")
-	public List<States> findByBiggestPopulation() {
+	public List<States> orderByBiggestPopulation() {
 		return statesService.orderStatesByBiggestPopulation();
 
 	}
 
 	@GetMapping("/biggestarea")
-	public List<States> findByBiggestArea() {
+	public List<States> orderByBiggestArea() {
 		return statesService.orderStatesByBiggestArea();
 
 	}
