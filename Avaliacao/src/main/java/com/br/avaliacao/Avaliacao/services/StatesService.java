@@ -1,5 +1,7 @@
 package com.br.avaliacao.Avaliacao.services;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
@@ -7,6 +9,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +23,6 @@ import com.br.avaliacao.Avaliacao.repositories.StatesRepository;
 
 @Service
 public class StatesService {
-
-	Calendar cal = Calendar.getInstance();
-	int currentYear = cal.get(Calendar.YEAR);
 
 	@Autowired
 	private StatesRepository statesRepository;
@@ -54,7 +54,7 @@ public class StatesService {
 			statesRepository.deleteById(id);
 			return ResponseEntity.ok().build();
 		}
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
 	}
 
@@ -62,17 +62,61 @@ public class StatesService {
 		return statesRepository.findByRegion(region);
 	}
 
-	public List<States> findStatesByBiggestPopulation() {
-		return statesRepository.findByBiggestPopulation();
+	public List<States> orderStatesByBiggestPopulation() {
+		return statesRepository.orderByBiggestPopulation();
 	}
 
-	public List<States> findStatesByBiggestArea() {
-		return statesRepository.findByBiggestsArea();
+	public List<States> orderStatesByBiggestArea() {
+		return statesRepository.orderByBiggestsArea();
+	}
+
+	public List<States> listStatesByPopulationBiggerThenAverage() {
+
+		return statesRepository.listByPopulationBiggerThenAverage(average(1));
+
+	}
+
+	public List<States> listStatesByAreaBiggerThenAverage() {
+
+		return statesRepository.listByAreaBiggerThenAverage(average(2));
+
+	}
+	
+
+	public List<States> listStatesByPopulationBiggerThenValue(double value) {
+
+		return statesRepository.listByPopulationBiggerThenValue(value);
+
+	}
+	
+
+	public List<States> listStatesByAreaBiggerThenValue(double value) {
+
+		return statesRepository.listByAreaBiggerThenValue(value);
+
+	}
+	
+	public double average(int info) {
+
+		List<States> sta = statesRepository.findAll();
+		double aux = 0;
+		for (int i = 0; i < sta.size(); i++) {
+			if(info == 1) {
+			aux = aux + sta.get(i).getPopulation();
+			}else if(info == 2) {
+				aux = aux + sta.get(i).getArea();
+			}
+		}
+		double average = (aux / sta.size());
+		return average;
 	}
 
 	public States validationTimeSinceFundation(States states) {
-		int fundationYear = states.getFundationDate().getYear();
-		int timeSinceFundation = currentYear - fundationYear;
+
+		LocalDate currentDate = LocalDate.now();
+		Period period = Period.between(currentDate, states.getFundationDate());
+
+		int timeSinceFundation = Math.abs(period.getYears());
 
 		if (states.getTimeSinceFundation() == timeSinceFundation) {
 			States st = statesRepository.save(states);

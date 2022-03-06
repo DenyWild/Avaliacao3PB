@@ -1,5 +1,6 @@
 package com.br.avaliacao.Avaliacao.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.br.avaliacao.Avaliacao.models.States;
 import com.br.avaliacao.Avaliacao.models.enums.Region;
@@ -30,9 +32,10 @@ public class StatesControler {
 
 	@PostMapping
 	@Transactional
-	public ResponseEntity<States> saveState(@RequestBody @Valid States states) {
+	public ResponseEntity<States> saveState(@RequestBody @Valid States states, UriComponentsBuilder uriBuilder) {
 		States st = statesService.saveState(states);
-		return ResponseEntity.ok().body(st);
+		URI uri = uriBuilder.path("/api/states/{id}").buildAndExpand(states.getId()).toUri();
+		return ResponseEntity.created(uri).body(st);
 	}
 
 	@GetMapping
@@ -54,14 +57,35 @@ public class StatesControler {
 
 	@GetMapping("/biggestpopulation")
 	public List<States> findByBiggestPopulation() {
-		return statesService.findStatesByBiggestPopulation();
+		return statesService.orderStatesByBiggestPopulation();
 
 	}
 
 	@GetMapping("/biggestarea")
 	public List<States> findByBiggestArea() {
-		return statesService.findStatesByBiggestArea();
+		return statesService.orderStatesByBiggestArea();
 
+	}
+
+	@GetMapping("/populationBiggerThenAvgerage")
+	public List<States> listByPopulationBiggerThenAverage() {
+		return statesService.listStatesByPopulationBiggerThenAverage();
+	}
+
+	@GetMapping("/areaBiggerThenAvgerage")
+	public List<States> listByAreaBiggerThenAverage() {
+		return statesService.listStatesByAreaBiggerThenAverage();
+	}
+
+	@GetMapping("/populationBiggerThenValue")
+	public List<States> listByPopulationBiggerThenValue(@RequestParam double value) {
+		return statesService.listStatesByPopulationBiggerThenValue(value);
+
+	}
+
+	@GetMapping("/areaBiggerThenValue")
+	public List<States> listByAreaBiggerThenValue(@RequestParam double value) {
+		return statesService.listStatesByAreaBiggerThenValue(value);
 	}
 
 	@PutMapping(path = "/{id}")

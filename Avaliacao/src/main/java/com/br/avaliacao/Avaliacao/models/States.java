@@ -1,5 +1,7 @@
 package com.br.avaliacao.Avaliacao.models;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -10,8 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
 
 import com.br.avaliacao.Avaliacao.models.enums.Region;
 
@@ -94,10 +98,12 @@ public class States {
 	}
 
 	public double getArea() {
+
 		return area;
 	}
 
 	public void setArea(double area) {
+
 		this.area = area;
 	}
 

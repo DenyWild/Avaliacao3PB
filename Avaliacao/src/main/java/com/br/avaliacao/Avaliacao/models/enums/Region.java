@@ -6,6 +6,10 @@ public enum Region {
 	NORTHEAST,
 	SOUTH,
 	SOUTHEAST,
-	MIDWEST
+	MIDWEST;
+	
+
+	
+	
 
 }

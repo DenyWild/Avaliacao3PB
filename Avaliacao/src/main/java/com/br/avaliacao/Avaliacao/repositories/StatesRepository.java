@@ -13,9 +13,21 @@ public interface StatesRepository extends JpaRepository<States, Long> {
 	List<States> findByRegion(Region region);
 
 	@Query(value = "SELECT * FROM States ORDER BY population DESC ", nativeQuery = true)
-	List<States> findByBiggestPopulation();
+	List<States> orderByBiggestPopulation();
 
 	@Query(value = "SELECT * FROM States ORDER BY area DESC ", nativeQuery = true)
-	List<States> findByBiggestsArea();
+	List<States> orderByBiggestsArea();
 
+	@Query(value = "SELECT * FROM States WHERE population > :average ORDER BY population DESC", nativeQuery = true)
+	List<States> listByPopulationBiggerThenAverage(double average);
+
+	@Query(value = "SELECT * FROM States WHERE area > :average ORDER BY area DESC", nativeQuery = true)
+	List<States> listByAreaBiggerThenAverage(double average);
+
+	@Query(value = "SELECT * FROM States WHERE population > :value ORDER BY population DESC", nativeQuery = true)
+	List<States> listByPopulationBiggerThenValue(double value);
+	
+	@Query(value = "SELECT * FROM States WHERE area > :value ORDER BY area DESC", nativeQuery = true)
+	List<States> listByAreaBiggerThenValue(double value);
+	
 }
